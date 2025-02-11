@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Threads</h1>
+
+    <!-- Кнопка создания нового Thread -->
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createThreadModal">
+        Create Thread
+    </button>
+
+    <!-- Список Threads -->
+    <div class="list-group">
+        {% for thread in threads %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <a href="{% url 'post:thread_detail' thread.id %}" class="text-decoration-none">
+                    <h5 class="mb-1">{{ thread.name }}</h5>
+                </a>
+                <p class="mb-1 text-muted">{{ thread.description|truncatechars:100 }}</p>
+            </div>
+            <div class="btn-group">
+                <a href="{% url 'post:edit_thread' thread.id %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                <form method="POST" action="{% url 'post:delete_thread' thread.id %}" onsubmit="return confirm('Are you sure you want to delete this thread?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Модальное окно для создания Thread -->
+    <div class="modal fade" id="createThreadModal" tabindex="-1" aria-labelledby="createThreadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createThreadModalLabel">New Thread</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

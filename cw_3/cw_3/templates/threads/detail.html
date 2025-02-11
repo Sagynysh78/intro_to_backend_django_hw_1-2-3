@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <!-- Заголовок и кнопки управления Thread -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ thread.name }}</h1>
+        <div class="btn-group">
+            <a href="{% url 'post:edit_thread' thread.id %}" class="btn btn-warning">Edit Thread</a>
+            <form method="POST" action="{% url 'post:delete_thread' thread.id %}" onsubmit="return confirm('Are you sure you want to delete this thread?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete Thread</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Описание Thread -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <p class="card-text">{{ thread.description }}</p>
+        </div>
+    </div>
+
+    <!-- Список постов -->
+    <h2>Posts</h2>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createPostModal">
+        Create Post
+    </button>
+    <div class="list-group">
+        {% for post in posts %}
+        <div class="list-group-item">
+            <h5>{{ post.title }}</h5>
+            <p>{{ post.description }}</p>
+            <small class="text-muted">Author: {{ post.author }}</small>
+            <div class="mt-2">
+                <a href="{% url 'post:edit_post' thread.id post.id %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                <form method="POST" action="{% url 'post:delete_post' thread.id post.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Модальное окно для создания Post -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createPostModalLabel">New Post</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

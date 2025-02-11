@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Thread: {{ thread.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Edit Thread: {{ thread.name }}</h1>
+
+    <!-- Форма редактирования Thread -->
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Поля формы -->
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Thread Name</label>
+            <input
+                type="text"
+                class="form-control"
+                id="id_name"
+                name="name"
+                value="{{ form.name.value }}"
+                required
+            >
+        </div>
+
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            <textarea
+                class="form-control"
+                id="id_description"
+                name="description"
+                rows="5"
+                required
+            >{{ form.description.value }}</textarea>
+        </div>
+
+        <!-- Кнопки -->
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a
+            href="{% url 'post:thread_detail' thread.id %}"
+            class="btn btn-secondary"
+        >
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}

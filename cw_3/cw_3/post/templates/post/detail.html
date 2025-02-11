@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{{ thread.name }}</h1>
+    <p>{{ thread.description }}</p>
+
+    <h2>Posts</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPostModal">
+        Create Post
+    </button>
+    <div class="list-group mt-3">
+        {% for post in posts %}
+            <div class="list-group-item">
+                <h5>{{ post.title }}</h5>
+                <p>{{ post.description }}</p>
+                <small>Author: {{ post.author }}</small>
+                <div>
+                    <a href="{% url 'post:edit_post' thread.id post.id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'post:delete_post' thread.id post.id %}" class="btn btn-sm btn-danger">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Модальное окно для создания Post -->
+    <div class="modal fade" id="createPostModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title">New Post</h5>
+                    </div>
+                    <div class="modal-body">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

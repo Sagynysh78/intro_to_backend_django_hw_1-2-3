@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Edit Post: {{ post.title }}</h1>
+
+    <!-- Форма редактирования поста -->
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Поля формы -->
+        <div class="mb-3">
+            <label for="id_title" class="form-label">Title</label>
+            <input
+                type="text"
+                class="form-control"
+                id="id_title"
+                name="title"
+                value="{{ form.title.value }}"
+                required
+            >
+        </div>
+
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            <textarea
+                class="form-control"
+                id="id_description"
+                name="description"
+                rows="5"
+                required
+            >{{ form.description.value }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_author" class="form-label">Author</label>
+            <input
+                type="text"
+                class="form-control"
+                id="id_author"
+                name="author"
+                value="{{ form.author.value }}"
+                required
+            >
+        </div>
+
+        <!-- Кнопки -->
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a
+            href="{% url 'post:thread_detail' post.thread.id %}"
+            class="btn btn-secondary"
+        >
+            Cancel
+        </a>
+    </form>
+</div>
+{% endblock %}
