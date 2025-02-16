@@ -55,7 +55,7 @@ def todo_list_delete(request, id):
 
 
 def todo_list_edit(request, id):
-    """Редактирование ToDo-листа"""
+
     todo_list = get_object_or_404(TodoList, id=id)
 
     if request.method == 'POST':
@@ -68,7 +68,7 @@ def todo_list_edit(request, id):
 
 
 def todo_delete(request, id):
-    """Удаление задачи"""
+
     todo = get_object_or_404(Todo, id=id)
     todo_list_id = todo.todo_list.id  # Чтобы вернуться в тот же список
     todo.delete()
