@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Todo Lists{% endblock %}
+
+{% block content %}
+    <h1>Todo Lists</h1>
+    <ul class="list-group">
+        {% for list in todo_lists %}
+            <li class="list-group-item">
+                <a href="{% url 'todo_list_detail' list.id %}">{{ list.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Форма создания списка дел -->
+    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addTodoListModal">Добавить список</button>
+
+    <div class="modal fade" id="addTodoListModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавить список дел</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="title" placeholder="Название" class="form-control mb-2" required>
+                        <textarea name="description" placeholder="Описание" class="form-control mb-2"></textarea>
+                        <button type="submit" class="btn btn-success">Создать</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

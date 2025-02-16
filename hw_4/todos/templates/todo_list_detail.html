@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ todo_list.title }}{% endblock %}
+
+{% block content %}
+<div class="todo-container">
+    <h1 class="mb-3">{{ todo_list.title }}</h1>
+    <p class="text-muted">{{ todo_list.description }}</p>
+
+    <h3>Задачи:</h3>
+    <ul class="list-group">
+        {% for todo in todos %}
+            <li class="list-group-item">
+                <div>
+                    <strong>{{ todo.title }}</strong> - {{ todo.due_date }}
+                    {% if todo.status %}
+                        <span class="badge bg-success">Выполнено</span>
+                    {% else %}
+                        <span class="badge bg-danger">Не выполнено</span>
+                    {% endif %}
+                </div>
+                <div>
+                    <a href="{% url 'todo_edit' todo.id %}" class="btn btn-sm btn-warning">✏ Редактировать</a>
+                    <a href="{% url 'todo_delete' todo.id %}" class="btn btn-sm btn-danger">🗑 Удалить</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Форма добавления задачи -->
+    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addTodoModal">+ Добавить задачу</button>
+
+    <div class="modal fade" id="addTodoModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавить задачу</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="title" placeholder="Название" class="form-control mb-2" required>
+                        <textarea name="description" placeholder="Описание" class="form-control mb-2"></textarea>
+                        <input type="date" name="due_date" class="form-control mb-2" required>
+                        <button type="submit" class="btn btn-success">Создать</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'todo_list_edit' todo_list.id %}" class="btn btn-warning mt-3">✏ Редактировать список</a>
+    <a href="{% url 'todo_list_delete' todo_list.id %}" class="btn btn-danger mt-3">🗑 Удалить список</a>
+</div>
+{% endblock %}
