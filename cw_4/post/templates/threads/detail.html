@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">{{ thread.name }}</h1>
+    <p>{{ thread.description }}</p>
+
+    <!-- Кнопка для создания поста -->
+    <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#postModal">
+        Create Post
+    </button>
+
+    <!-- Модальное окно для создания поста -->
+    <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="postModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="postModalLabel">Create Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список постов -->
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.description }}</p>
+                    <p class="card-text"><small class="text-muted">Author: {{ post.author }}</small></p>
+                    <p class="card-text">
+                        <a href="{{ post.picture.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                            {{ post.picture.name|basename }}
+                        </a>
+                    </p>
+                    <a href="{% url 'post_edit' post.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'post_delete' post.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

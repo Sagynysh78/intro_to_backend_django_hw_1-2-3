@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Threads</h1>
+    <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#threadModal">
+        Create Thread
+    </button>
+
+    <!-- Модальное окно для создания треда -->
+    <div class="modal fade" id="threadModal" tabindex="-1" aria-labelledby="threadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="threadModalLabel">Create Thread</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список тредов -->
+    <div class="row">
+        {% for thread in threads %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ thread.name }}</h5>
+                    <p class="card-text">{{ thread.description|truncatechars:100 }}</p>
+                    <a href="{% url 'thread_detail' thread.id %}" class="btn btn-primary">View Thread</a>
+                    <!-- Кнопки Edit и Delete -->
+                    <a href="{% url 'thread_edit' thread.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'thread_delete' thread.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
